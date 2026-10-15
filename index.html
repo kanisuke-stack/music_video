@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#090b16" />
+  <title>Tum Jo Aaye</title>
+
+  <!-- Typography: Noto Serif Devanagari for authentic Hindi lyrics & Plus Jakarta Sans for UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <!-- Canvas Stage for 2D Motion Graphics -->
+  <canvas id="stage" class="stage-canvas"></canvas>
+
+  <!-- Ambient Vignette & Letterbox Overlay -->
+  <div class="vignette-overlay" aria-hidden="true"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. OPENING SCREEN: Simple "Start" Button Only                             -->
+  <!-- ========================================================================= -->
+  <section id="opening-screen" class="screen opening-screen active">
+    <div class="opening-content">
+      <button id="btn-start" class="btn-start" type="button" aria-label="Start">
+        <span class="btn-start-glow"></span>
+        <span class="btn-start-text">Start</span>
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 2. IN-VIDEO HUD: Synchronized Original Hindi Lyrics & Player Controls     -->
+  <!-- ========================================================================= -->
+  <div id="video-hud" class="video-hud hidden">
+    <!-- Synchronized Original Lyrics (No subtext, no added text) -->
+    <div class="lyrics-container">
+      <div id="lyrics-box" class="lyrics-box">
+        <p id="lyric-main" class="lyric-main"></p>
+      </div>
+    </div>
+
+    <!-- Floating Discreet Player Controls (Auto-hides on idle) -->
+    <footer id="player-controls" class="player-controls">
+      <div class="controls-glass-panel">
+        <!-- Play / Pause -->
+        <button id="btn-play-pause" class="ctrl-btn" type="button" aria-label="Play or Pause">
+          <svg id="icon-ctrl-pause" class="ctrl-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+          </svg>
+          <svg id="icon-ctrl-play" class="ctrl-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </button>
+
+        <!-- Current Timestamp -->
+        <span id="time-current" class="time-label">0:00</span>
+
+        <!-- Scrubber Track -->
+        <div id="progress-container" class="progress-container" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-track">
+            <div id="progress-fill" class="progress-fill"></div>
+            <div id="progress-handle" class="progress-handle"></div>
+          </div>
+        </div>
+
+        <!-- Total Timestamp -->
+        <span id="time-total" class="time-label">2:33</span>
+
+        <!-- Volume / Mute -->
+        <button id="btn-volume" class="ctrl-btn" type="button" aria-label="Toggle Sound">
+          <svg id="icon-vol-on" class="ctrl-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+          <svg id="icon-vol-mute" class="ctrl-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+          </svg>
+        </button>
+
+        <!-- Replay Button -->
+        <button id="btn-replay-hud" class="ctrl-btn" type="button" aria-label="Replay from Beginning" title="Restart">
+          <svg class="ctrl-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

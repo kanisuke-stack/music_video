@@ -1,0 +1,358 @@
+/* ==========================================================================
+   CINEMATIC ROMANTIC MUSIC VIDEO - ORIGINAL SOUNDTRACK EDITION
+   ========================================================================== */
+
+:root {
+  --color-midnight-dark: #070913;
+  --color-midnight: #0c1024;
+  --color-lavender-deep: #3d3455;
+  --color-lavender: #9f93c8;
+  --color-lavender-light: #d6cee8;
+  --color-blush-deep: #b3566f;
+  --color-blush: #e899af;
+  --color-blush-light: #fae1e8;
+  --color-gold: #f3c76d;
+  --color-gold-light: #ffe5a8;
+  --color-cream: #fff7ee;
+  --color-white: #ffffff;
+
+  --font-hindi: 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-midnight-dark);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ==========================================================================
+   CANVAS STAGE & AMBIENT VIGNETTE
+   ========================================================================== */
+
+.stage-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  display: block;
+}
+
+.vignette-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(9, 11, 22, 0) 50%,
+    rgba(6, 8, 17, 0.45) 85%,
+    rgba(4, 5, 12, 0.8) 100%
+  );
+}
+
+/* ==========================================================================
+   1. OPENING SCREEN: Simple "Start" Button Only
+   ========================================================================== */
+
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s var(--ease-cinematic), visibility 1.2s var(--ease-cinematic);
+}
+
+.screen.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.opening-screen {
+  background: radial-gradient(circle at 50% 50%, rgba(18, 22, 52, 0.65), rgba(7, 9, 19, 0.95));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.opening-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: startFloatIn 1.4s var(--ease-cinematic) forwards;
+}
+
+@keyframes startFloatIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.btn-start {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 42px;
+  background: linear-gradient(135deg, rgba(243, 199, 109, 0.95), rgba(232, 153, 175, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  color: var(--color-midnight-dark);
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -5px rgba(243, 199, 109, 0.45), 0 0 40px rgba(232, 153, 175, 0.3);
+  transition: transform 0.3s var(--ease-soft), box-shadow 0.3s var(--ease-soft);
+}
+
+.btn-start:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 16px 40px -5px rgba(243, 199, 109, 0.65), 0 0 50px rgba(232, 153, 175, 0.45);
+}
+
+.btn-start:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-start .icon-play {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==========================================================================
+   2. IN-VIDEO HUD (ORIGINAL HINDI LYRICS & CONTROLS)
+   ========================================================================== */
+
+.video-hud {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(16px, 3vw, 28px);
+  transition: opacity 0.6s var(--ease-soft);
+}
+
+.video-hud.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Synchronized Lyrics Container: Rendered directly as kinetic canvas dream-theatre typography */
+.lyrics-container {
+  display: none;
+}
+
+.lyrics-box {
+  max-width: 840px;
+  text-align: center;
+  padding: 14px 32px;
+  border-radius: 24px;
+  background: rgba(8, 10, 22, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s var(--ease-cinematic);
+}
+
+.lyrics-box.fading {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* Original Hindi Typography */
+.lyric-main {
+  font-family: var(--font-hindi);
+  font-size: clamp(1.5rem, 4.2vw, 2.4rem);
+  font-weight: 500;
+  color: var(--color-cream);
+  line-height: 1.35;
+  text-shadow: 0 2px 18px rgba(243, 199, 109, 0.45), 0 0 35px rgba(232, 153, 175, 0.25);
+  letter-spacing: 0.02em;
+}
+
+/* Floating Discreet Player Controls */
+.player-controls {
+  pointer-events: auto;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s var(--ease-soft), transform 0.4s var(--ease-soft);
+}
+
+.player-controls.idle {
+  opacity: 0.12;
+  transform: translateY(4px);
+}
+
+.player-controls:hover {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.controls-glass-panel {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.8vw, 16px);
+  background: rgba(11, 15, 33, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(243, 199, 109, 0.2);
+  padding: 9px 20px;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  max-width: 640px;
+  width: 100%;
+}
+
+.ctrl-btn {
+  background: none;
+  border: none;
+  color: var(--color-cream);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-gold);
+  transform: scale(1.08);
+}
+
+.ctrl-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.ctrl-icon.hidden {
+  display: none;
+}
+
+.time-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-lavender-light);
+  min-width: 36px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scrubber / Progress */
+.progress-container {
+  flex: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  position: relative;
+  overflow: visible;
+  transition: height 0.2s ease;
+}
+
+.progress-container:hover .progress-track {
+  height: 6px;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-blush), var(--color-gold));
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(243, 199, 109, 0.5);
+}
+
+.progress-handle {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 12px;
+  height: 12px;
+  background: var(--color-white);
+  border: 2px solid var(--color-gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  box-shadow: 0 0 10px rgba(243, 199, 109, 0.8);
+  transition: transform 0.2s ease;
+}
+
+.progress-container:hover .progress-handle {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .player-controls {
+    padding: 0 8px;
+  }
+  .controls-glass-panel {
+    gap: 8px;
+    padding: 8px 14px;
+  }
+  .time-label {
+    font-size: 0.7rem;
+    min-width: 28px;
+  }
+  .lyrics-container {
+    margin-bottom: 75px;
+  }
+  .lyrics-box {
+    padding: 10px 18px;
+  }
+}
